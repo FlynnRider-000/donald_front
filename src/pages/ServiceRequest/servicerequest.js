@@ -122,6 +122,13 @@ export default function MaterialTableDemo() {
       .then(function (response){
          var tt = response.data;
          for(var i = 0 ; i < tt.length; i++){
+            if(tt[i].User === null){
+               tt[i].User = {
+                  id: -1,
+                  firstName: '',
+                  lastName: ''
+               };
+            }
             if(tt[i].String === null){
                tt[i].String = initString;
             }
