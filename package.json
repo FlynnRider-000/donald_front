@@ -15,6 +15,7 @@
     "i18next-xhr-backend": "^3.2.2",
     "material-table": "^1.57.2",
     "react": "^16.13.1",
+    "react-checkbox-component": "^0.1.15",
     "react-country-flag": "^2.1.0",
     "react-data-grid": "^7.0.0-canary.16",
     "react-data-grid-addons": "^7.0.0-alpha.24",

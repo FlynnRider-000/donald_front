@@ -65,24 +65,28 @@ export default function MaterialTableDemo() {
   }
 
    const columns = [
-      { title: t('Date.label'), field: 'date'},
+      { title: t('Date.label'), field: 'date', defaultSort:'desc', cellStyle:{minWidth:'120px'}},
+      { title: t('RequestedPickUpDateTime.label'), render: rowData => {let temp = new Date(rowData.reqPickTime); return rowData.reqPickTime !== null ? getDateFormat(rowData.reqPickTime)+ " " + getTimeFormat(rowData.reqPickTime): ""}, customSort:(a,b) => a.reqPickTime > b.reqPickTime ? 1: -1},
+      { title: t('status.label'), field: 'status', lookup: { 4:'abgeholt', 3: 'im Club (b)', 2: 'im Laden (b)', 1: 'im Laden (u)', 0: 'im Club (u)' }},
       { title: t('CustomerName.label'), customSort: (a, b) => (a.Customer.firstName + a.Customer.lastName).toLowerCase() > (b.Customer.firstName + b.Customer.lastName).toLowerCase() ? 1 : -1, customFilterAndSearch: (term, rowData) => (rowData.Customer.firstName + " " + rowData.Customer.lastName).includes(term), render: rowData => rowData.Customer && (rowData.Customer.firstName + " " + rowData.Customer.lastName)},
-      { title: t('SportsClub.label'), field: 'Customer.sportsClub', customSort: (a, b) => compareFunction(a,b,'Customer.sportsClub')},
-      { title: t('SportType.label'), field: 'Racket.sportType', lookup: { 2: 'Squash', 1: 'Tennis', 0: 'Badminton' }},
+      { title: t('location.label'), field: 'location', customSort: (a, b) => compareFunction(a,b,'location')},
+      { title: t('ConfirmedPickUpDateTime.label'), render: rowData => {let temp = new Date(rowData.confPickTime); return rowData.confPickTime !== null ? getDateFormat(rowData.confPickTime) + " " + getTimeFormat(rowData.confPickTime): ""}, customSort:(a,b) => a.confPickTime > b.confPickTime ? 1: -1},
+      { title: t('Payed.label'), field: 'payed', render: rowData => {return rowData.payed === 'no' ? 'nein' : rowData.payed}},
       { title: t('RacketBrand.label'), field: 'Racket.Brand', customSort: (a, b) => compareFunction(a,b,'Racket.Brand')},
       { title: t('RacketName.label'), field: 'Racket.Name', customSort: (a, b) => compareFunction(a,b,'Racket.Name')},
       { title: t('RacketGrip.label'), field: 'Racket.Grip', customSort: (a, b) => compareFunction(a,b,'Racket.Grip') },
-      { title: t('StringBrand.label'), field: 'String.Brand', customSort: (a, b) => compareFunction(a,b,'String.Brand')},
+      { title: t('SportType.label'), field: 'Racket.sportType', lookup: { 2: 'Squash', 1: 'Tennis', 0: 'Badminton' }},
+      { title: t('StringBrand-SR.label'), field: 'String.Brand', customSort: (a, b) => compareFunction(a,b,'String.Brand')},
       { title: t('StringName.label'), field: 'String.Name', customSort: (a, b) => compareFunction(a,b,'String.Name')},
-      { title: t('StringThickness.label'), field: 'String.Thickness', type: 'numeric'},
+      { title: t('StringThickness.label'), field: 'String.Thickness', type: 'numeric', headerStyle: {textAlign:'left', flexDirection:'row'}, cellStyle: {textAlign:'left'}, sorting:false},
       { title: t('StringColor.label'), field: 'String.Color', customSort: (a, b) => compareFunction(a,b,'String.Color')},
-      { title: t('StringHardness.label'), field: 'String.Hardness', type: 'numeric'},
-      { title: t('status.label'), field: 'status', lookup: { 4:'abgeholt', 3: 'im Club (b)', 2: 'im Laden (b)', 1: 'im Laden (u)', 0: 'im Club (u)' }},
-      { title: t('RequestedPickUpDateTime.label'), render: rowData => {let temp = new Date(rowData.reqPickTime); return rowData.reqPickTime !== null ? getDateFormat(rowData.reqPickTime)+ " " + getTimeFormat(rowData.reqPickTime): ""}, customSort:(a,b) => a.reqPickTime > b.reqPickTime ? 1: -1},
-      { title: t('location.label'), field: 'location', customSort: (a, b) => compareFunction(a,b,'location')},
-      { title: t('ConfirmedPickUpDateTime.label'), render: rowData => {let temp = new Date(rowData.confPickTime); return rowData.confPickTime !== null ? getDateFormat(rowData.confPickTime) + " " + getTimeFormat(rowData.confPickTime): ""}, customSort:(a,b) => a.confPickTime > b.confPickTime ? 1: -1},
-      { title: t('Payed.label'), field: 'payed'},
+      { title: t('StringHardness.label'), field: 'String.Hardness', type: 'numeric', headerStyle: {textAlign:'left', flexDirection:'row'}, cellStyle: {textAlign:'left'}, sorting:false},
       { title: t('Agent.label'), customFilterAndSearch: (term, rowData) => (rowData.User.firstName + " " + rowData.User.lastName).includes(term),render: rowData => rowData.User.firstName + " " + rowData.User.lastName, customSort: (a, b) => (a.User.firstName + a.User.lastName).toLowerCase() > (b.User.firstName + b.User.lastName).toLowerCase() ? 1 : -1},
+
+      { title: t('SportsClub.label'), field: 'Customer.sportsClub', customSort: (a, b) => compareFunction(a,b,'Customer.sportsClub')},
+      
+      
+      
    ];
 
    const [data, setData] = React.useState([]);
@@ -187,7 +191,13 @@ export default function MaterialTableDemo() {
       data.type = mailType;
       axios.post(serverUrl + 'service/sendMail',{data:JSON.stringify(data)})
       .then(function (response){
-         alert(response.data);
+         if(response.data === 'okay'){
+            alert(t('MailOkay.label'));
+         }
+         else
+         {
+            alert(response.data);
+         }
          setOpenMailDlg(false);
       })
       .catch(function (error){
@@ -229,6 +239,11 @@ export default function MaterialTableDemo() {
                   },
                   filterCellStyle: {
                      border: '1px solid #eee',
+                  },
+                  actionsCellStyle: {
+                     '&': {
+                        color: 'red !important',
+                     },
                   }
                }}
                localization={{
@@ -277,9 +292,25 @@ export default function MaterialTableDemo() {
                      searchPlaceholder: t('toolbar.searchPlaceholder.label'),
                   }
                }}
+               editable={userRole === 0 ? {
+                  onRowDelete: (oldData) =>
+                     new Promise((resolve) => {
+                        setTimeout(() => {
+                        resolve();
+                        axios.post(serverUrl + 'service/deleteServiceRequest',{
+                           serviceId: data[data.indexOf(oldData)].id
+                        })
+                        .then(function (response){
+                           getRequests();
+                        })
+                        }, 600);
+                     })
+                  }:{
+               }}
                actions={userRole === 0 ? [
                   {
                      icon: 'edit',
+                     iconProps: { style: { fontSize: "24px" } },
                      tooltip: t('EditServiceRequest.label'),
                      onClick: (event, rowData) => {
                         if(rowData.User.id === userId || userRole === 0){
@@ -291,6 +322,7 @@ export default function MaterialTableDemo() {
                   {
                      icon: 'email',
                      tooltip: t('SendToCustomer.label'),
+                     iconProps: { style: { fontSize: "24px" } },
                      onClick: (event, rowData) => {
                         if(rowData.User.id === userId || userRole === 0){
                            setCurData(rowData);
@@ -302,6 +334,7 @@ export default function MaterialTableDemo() {
                   {
                      icon: 'send',
                      tooltip: t('SendToAgent.label'),
+                     iconProps: { style: { fontSize: "24px" } },
                      onClick: (event, rowData) => {
                         if(rowData.User.id === userId || userRole === 0){
                            setCurData(rowData);
@@ -317,15 +350,6 @@ export default function MaterialTableDemo() {
                      onClick: (event, rowData) => {
                         setCurData(rowData);
                         setOpenDlg(true);
-                     }
-                  },
-                  {
-                     icon: 'email',
-                     tooltip: t('SendToCustomer.label'),
-                     onClick: (event, rowData) => {
-                        setCurData(rowData);
-                        setMailType(0);
-                        setOpenMailDlg(true);
                      }
                   }
                ]}

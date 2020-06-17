@@ -53,10 +53,11 @@ const Topbar = props => {
       className={clsx(classes.root, className)}
     >
       <Toolbar>
-        <RouterLink to="/">
+        <RouterLink>
           <img
             alt="Logo"
-            src={require("../../../../assets/images/logo.svg")}
+            width="200px"
+            src={require("../../../../assets/images/ds_logo_500.png")}
           />
         </RouterLink>
         <div className={classes.flexGrow} />

@@ -79,7 +79,7 @@ export default function ServiceRequest(props) {
         from: userId,
         to: data.Customer !== undefined ? data.Customer.id : -1,
         subject : "Dein Schläger ist besaitet.",
-        text: "Hallo " + toClient.slice(1,-1) + ",\nDein " + racketInfo + " ist fertig besaitet und kann am " + dateInfo + " um " + timeInfo + " Uhr an folgendem Ort  abgeholt werden: " + location + "\nMit Gruß DSS\n--\nDonald Schulz Sport\nWiesenstrasse 16\n37073 Göttingen\n0551-77344"
+        text: "Hallo " + toClient.slice(1,-1) + ",\ndein " + racketInfo + " ist fertig besaitet und kann am " + dateInfo + " um " + timeInfo + " Uhr an folgendem Ort  abgeholt werden: " + location + "\nMit Gruß DSS\n--\nDonald Schulz Sport\nWiesenstrasse 16\n37073 Göttingen\n0551-77344"
     };
 
     const onSubmit = () => {
@@ -104,7 +104,7 @@ export default function ServiceRequest(props) {
                     <TableBody>
                         <TableRow>
                             <TableCell component="th" scope="row">
-                                Subject
+                                {t('MailSubject.label')}
                             </TableCell>
                             <TableCell>
                                 {MailInfo.subject}
@@ -112,7 +112,7 @@ export default function ServiceRequest(props) {
                         </TableRow>
                         <TableRow>
                             <TableCell component="th" scope="row">
-                                Body
+                                {t('MailBody.label')}
                             </TableCell>
                             <TableCell>
                                 {MailInfo.text.split("\n").map((val,index) => (
@@ -124,8 +124,8 @@ export default function ServiceRequest(props) {
                 </Table>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onSubmit} type = "submit">Send</Button>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={onSubmit} type = "submit">{t('MailSend.label')}</Button>
+                <Button onClick={onClose}>{t('MailCancel.label')}</Button>
             </DialogActions>
         </Dialog>
         </React.Fragment>

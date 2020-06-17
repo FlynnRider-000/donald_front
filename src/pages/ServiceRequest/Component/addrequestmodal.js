@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Paper, RadioGroup, FormControlLabel, Radio,
         FormControl, InputLabel, Select, MenuItem, Grid} from '@material-ui/core';
 
+import Checkbox from 'react-checkbox-component'
+
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
@@ -16,6 +18,8 @@ import { DateTimePicker } from "@material-ui/pickers";
 import { useSelector } from 'react-redux'
 
 import { serverUrl } from '../../../api/serverUrl';
+
+import TermsDlg from './Terms';
 const axios = require('axios');
 
 const useStyles = makeStyles((theme) => ({
@@ -24,6 +28,11 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     margin: 'auto',
     width: 'fit-content',
+  },
+  termsLink: {
+    color: '#1a0dab',
+    textDecoration: 'underline',
+    cursor: 'pointer',
   },
   formControl1: {
     marginTop: theme.spacing(1),
@@ -45,6 +54,11 @@ const useStyles = makeStyles((theme) => ({
   formControlLabel: {
     marginTop: theme.spacing(1),
   },
+  dlgCss: {
+    '& .checkbox:focus': {
+        outline: 'none !important',
+    }
+  }
 }));
 
 export default function ServiceRequest(props) {
@@ -52,10 +66,12 @@ export default function ServiceRequest(props) {
     const { opened, onAdd, onClose, data} = props;
     const { t } = useTranslation();
     const [refData, setRefData] = React.useState([]);
-    
+    const [agreeTerms, setAgreeTerms] = React.useState(true);
+    const [showTerms, setShowTerms] = React.useState(false);
+
     const userId = useSelector(state => state.user.userId);
     const userRole = useSelector(state => state.user.userRole);
-    
+
     const sports = [t('Badminton.label'), t('Tennis.label'), t('Squash.label')]
 
     const initCustomer = {
@@ -225,11 +241,15 @@ export default function ServiceRequest(props) {
             res.stringId = curData.stringId;
         else
             res1.String = newString;
-        if(flg === 0)
+        if(flg === 0 && agreeTerms)
         {
             res1.realdata = res;
             onAdd(res1);
         }
+    }
+
+    const onHideTerms = () => {
+        setShowTerms(false);
     }
 
     return (
@@ -240,6 +260,7 @@ export default function ServiceRequest(props) {
             open={opened}
             onEntered={onEntered}
             onClose={handleClose}
+            className={classes.dlgCss}
             aria-labelledby="max-width-dialog-title"
         >
             <DialogTitle id="max-width-dialog-title"><div className={classes.dlgTitle}>{t('ServiceRequest.label')}</div></DialogTitle>
@@ -365,7 +386,6 @@ export default function ServiceRequest(props) {
                                         label={t('Number.label')}
                                         margin="dense"
                                         name="number"
-                                        type="number"
                                         onChange={handleNewCustomerChange}
                                         value={newCustomer.number}
                                         variant="outlined"
@@ -420,11 +440,8 @@ export default function ServiceRequest(props) {
                                         margin="dense"
                                         name="sportsClub"
                                         onChange={handleNewCustomerChange}
-                                        required
                                         value={newCustomer.sportsClub}
                                         variant="outlined"
-                                        validators={['required']}
-                                        errorMessages={['Feld muss ausgefüllt werden']}
                                     />
                                     </Grid>
                                     <Grid
@@ -784,6 +801,13 @@ export default function ServiceRequest(props) {
                         </Grid>
                     </Grid>
                     <Divider/>
+                    <div style={{padding:'10px 0px'}}>
+                        <Checkbox shape="square" className={classes.termsCheckBox} size="small" isChecked={agreeTerms} onChange={() => setAgreeTerms(!agreeTerms)}/>
+                        <div style={{fontSize:'18px', fontFamily:'Roboto', display:'inline', color: agreeTerms ? 'black':'red'}}>
+                            {t('TermsLink1.label')}<span onClick={() => setShowTerms(true)} className={classes.termsLink}>{t('TermsLink2.label')}</span>{t('TermsLink3.label')}
+                        </div>
+                    </div>
+                    <Divider/>
                     <DialogActions>
                         <Button color="primary" type="submit">
                             {t('Add.label')}
@@ -795,6 +819,7 @@ export default function ServiceRequest(props) {
                 </ValidatorForm>
             </DialogContent>
         </Dialog>
+        <TermsDlg opened={showTerms} onClose={onHideTerms}></TermsDlg>
         </React.Fragment>
     );
 }

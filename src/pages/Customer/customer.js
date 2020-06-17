@@ -21,12 +21,12 @@ export default function MaterialTableDemo() {
       { title: t('FirstName.label'), field: 'firstName' },
       { title: t('LastName.label'), field: 'lastName' },
       { title: t('Street.label'), field: 'street' },
-      { title: t('Number.label'), field: 'number', type: 'numeric' },
-      { title: t('ZIPcode.label'), field: 'ZIPcode', type: 'numeric' },
+      { title: t('Number.label'), field: 'number', sorting:false, headerStyle: {textAlign:'left', flexDirection:'row'}, cellStyle: {textAlign:'left'}},
+      { title: t('ZIPcode.label'), field: 'ZIPcode', sorting:false, type: 'numeric', headerStyle: {textAlign:'left', flexDirection:'row'}, cellStyle: {textAlign:'left'}},
       { title: t('City.label'), field: 'city'},
+      { title: t('Phone.label'), field: 'phone'},
       { title: t('SportsClub.label'), field: 'sportsClub'},
-      { title: t('Email.label'), field: 'eMail'},
-      { title: t('Phone.label'), field: 'phone'}
+      { title: t('Email.label'), field: 'eMail'}
    ];
 
    const [data, setData] = React.useState([]);
@@ -107,7 +107,7 @@ export default function MaterialTableDemo() {
                      searchPlaceholder: t('toolbar.searchPlaceholder.label'),
                   }
                }}
-               editable={{
+               editable={userRole === 0 ? {
                onRowUpdate: (newData, oldData) =>
                   new Promise((resolve) => {
                      setTimeout(() => {
@@ -136,6 +136,23 @@ export default function MaterialTableDemo() {
                      })
                      }, 600);
                   }),
+               }: {
+                  onRowUpdate: (newData, oldData) =>
+                  new Promise((resolve) => {
+                     setTimeout(() => {
+                     resolve();
+                     if (oldData) {
+                        const newUserData = {...newData};
+                        newUserData.id = data[data.indexOf(oldData)].id;
+                        axios.post(serverUrl + 'service/updateCustomer',{
+                           customerInfo: newUserData
+                        })
+                        .then(function (response){
+                           getCustomers();
+                        })
+                     }
+                     }, 600);
+                  })
                }}
             />
          </Card>

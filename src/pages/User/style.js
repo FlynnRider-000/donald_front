@@ -3,7 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.background.default,
-        minHeight: 'calc(100% - 103px)'
+        minHeight: 'calc(100% - 103px)',
+        '& td div button': {
+            padding:'5px !important'
+        }
     },
     cardRoot: {
         padding: 16,

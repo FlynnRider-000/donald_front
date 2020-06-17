@@ -18,11 +18,11 @@ export default function MaterialTableDemo() {
    const { t } = useTranslation()
 
    const columns = [
-      { title: t('CustomerName.label'), editable: 'never', filtering: false, customSort: (a, b) => (a.Customer.firstName + a.Customer.lastName).toLowerCase() > (b.Customer.firstName + b.Customer.lastName).toLowerCase() ? 1 : -1, customFilterAndSearch: (term, rowData) => (rowData.Customer.firstName + " " + rowData.Customer.lastName).includes(term), render: rowData => rowData.Customer && (rowData.Customer.firstName + " " + rowData.Customer.lastName + "/" + rowData.Customer.sportsClub)},
-      { title: t('SportType.label'), field: 'Racket.sportType', lookup: { 2: 'Squash', 1: 'Tennis', 0: 'Badminton' }},
       { title: t('RacketBrand.label'), field: 'Racket.Brand', customSort: (a, b) => compareFunction(a,b,'Racket.Brand')},
       { title: t('RacketName.label'), field: 'Racket.Name', customSort: (a, b) => compareFunction(a,b,'Racket.Name')},
       { title: t('RacketGrip.label'), field: 'Racket.Grip', customSort: (a, b) => compareFunction(a,b,'Racket.Grip') },
+      { title: t('SportType.label'), field: 'Racket.sportType', lookup: { 2: 'Squash', 1: 'Tennis', 0: 'Badminton' }},
+      { title: t('CustomerName-Racket.label'), editable: 'never', filtering: false, customSort: (a, b) => (a.Customer.firstName + a.Customer.lastName).toLowerCase() > (b.Customer.firstName + b.Customer.lastName).toLowerCase() ? 1 : -1, customFilterAndSearch: (term, rowData) => (rowData.Customer.firstName + " " + rowData.Customer.lastName).includes(term), render: rowData => rowData.Customer && (rowData.Customer.firstName + " " + rowData.Customer.lastName + "/" + rowData.Customer.sportsClub)},
    ];
 
    const [data, setData] = React.useState([]);
@@ -115,7 +115,7 @@ export default function MaterialTableDemo() {
                      searchPlaceholder: t('toolbar.searchPlaceholder.label'),
                   }
                }}
-               editable={{
+               editable={userRole === 0 ? {
                onRowUpdate: (newData, oldData) =>
                   new Promise((resolve) => {
                      setTimeout(() => {
@@ -144,6 +144,22 @@ export default function MaterialTableDemo() {
                      }, 600);
                      
                   }),
+               } : {
+                  onRowUpdate: (newData, oldData) =>
+                  new Promise((resolve) => {
+                     setTimeout(() => {
+                     resolve();
+                     if (oldData) {
+                        const newRacketData = {...newData};
+                        axios.post(serverUrl + 'service/updateRacket',{
+                           racketInfo: newRacketData.Racket
+                        })
+                        .then(function (response){
+                           getRackets();
+                        })
+                     }
+                     }, 600);
+                  })
                }}
             />
          </Card>

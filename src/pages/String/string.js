@@ -29,9 +29,9 @@ export default function MaterialTableDemo() {
       { title: t('Racket.label'), editable: 'never', filtering: false, customSort: (a, b) => (a.Racket.sportType + a.Racket.Brand + a.Racket.Name + a.Racket.Grip).toLowerCase() > (b.Racket.sportType + b.Racket.Brand + b.Racket.Name + b.Racket.Grip).toLowerCase() ? 1 : -1, render: rowData => rowData.Racket && (sportTypes[rowData.Racket.sportType] + "-" + rowData.Racket.Brand + "-" + rowData.Racket.Name + "-" + rowData.Racket.Grip)},
       { title: t('StringBrand.label'), field: 'String.Brand', customSort: (a, b) => compareFunction(a,b,'String.Brand')},
       { title: t('StringName.label'), field: 'String.Name', customSort: (a, b) => compareFunction(a,b,'String.Name')},
-      { title: t('StringThickness.label'), field: 'String.Thickness', type: 'numeric'},
+      { title: t('StringThickness.label'), sorting:false, field: 'String.Thickness', type: 'numeric',headerStyle: {textAlign:'left', flexDirection:'row'}, cellStyle: {textAlign:'left'}},
       { title: t('StringColor.label'), field: 'String.Color', customSort: (a, b) => compareFunction(a,b,'String.Color')},
-      { title: t('StringHardness.label'), field: 'String.Hardness', type: 'numeric'},
+      { title: t('StringHardness.label'), sorting:false, field: 'String.Hardness', type: 'numeric',headerStyle: {textAlign:'left', flexDirection:'row'}, cellStyle: {textAlign:'left'}},
    ];
 
    const [data, setData] = React.useState([]);
@@ -119,7 +119,7 @@ export default function MaterialTableDemo() {
                      searchPlaceholder: t('toolbar.searchPlaceholder.label'),
                   }
                }}
-               editable={{
+               editable={userRole === 0 ? {
                onRowUpdate: (newData, oldData) =>
                   new Promise((resolve) => {
                      setTimeout(() => {
@@ -145,6 +145,22 @@ export default function MaterialTableDemo() {
                      .then(function (response){
                         getStrings();
                      })
+                     }, 600);
+                  }),
+               } : {
+                  onRowUpdate: (newData, oldData) =>
+                  new Promise((resolve) => {
+                     setTimeout(() => {
+                     resolve();
+                     if (oldData) {
+                        const newUserData = {...newData};
+                        axios.post(serverUrl + 'service/updateString',{
+                           stringInfo: newUserData.String
+                        })
+                        .then(function (response){
+                           getStrings();
+                        })
+                     }
                      }, 600);
                   }),
                }}
