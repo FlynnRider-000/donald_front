@@ -16,7 +16,8 @@ import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    boxShadow: 'none'
+    boxShadow: 'none',
+    backgroundColor: '#13B0E5 !important'
   },
   flexGrow: {
     flexGrow: 1
@@ -65,7 +66,6 @@ const Topbar = props => {
           <IconButton color="inherit" onClick={selectLanguage}>
             <Badge
               color="primary"
-              variant="dot"
             >
               <ReactCountryFlag countryCode={language} svg />
             </Badge>

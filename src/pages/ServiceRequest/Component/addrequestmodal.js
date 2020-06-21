@@ -66,7 +66,7 @@ export default function ServiceRequest(props) {
     const { opened, onAdd, onClose, data} = props;
     const { t } = useTranslation();
     const [refData, setRefData] = React.useState([]);
-    const [agreeTerms, setAgreeTerms] = React.useState(true);
+    const [agreeTerms, setAgreeTerms] = React.useState(false);
     const [showTerms, setShowTerms] = React.useState(false);
 
     const userId = useSelector(state => state.user.userId);

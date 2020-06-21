@@ -72,7 +72,7 @@ export default function MaterialTableDemo() {
       { title: t('location.label'), field: 'location', customSort: (a, b) => compareFunction(a,b,'location')},
       { title: t('ConfirmedPickUpDateTime.label'), render: rowData => {let temp = new Date(rowData.confPickTime); return rowData.confPickTime !== null ? getDateFormat(rowData.confPickTime) + " " + getTimeFormat(rowData.confPickTime): ""}, customSort:(a,b) => a.confPickTime > b.confPickTime ? 1: -1},
       { title: t('Payed.label'), field: 'payed', render: rowData => {return rowData.payed === 'no' ? 'nein' : rowData.payed}},
-      { title: t('RacketBrand.label'), field: 'Racket.Brand', customSort: (a, b) => compareFunction(a,b,'Racket.Brand')},
+      { title: t('Racket.label'), field: 'Racket.Brand', customSort: (a, b) => compareFunction(a,b,'Racket.Brand')},
       { title: t('RacketName.label'), field: 'Racket.Name', customSort: (a, b) => compareFunction(a,b,'Racket.Name')},
       { title: t('RacketGrip.label'), field: 'Racket.Grip', customSort: (a, b) => compareFunction(a,b,'Racket.Grip') },
       { title: t('SportType.label'), field: 'Racket.sportType', lookup: { 2: 'Squash', 1: 'Tennis', 0: 'Badminton' }},

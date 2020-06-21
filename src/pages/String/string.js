@@ -25,13 +25,15 @@ export default function MaterialTableDemo() {
    const sportTypes = ["Badminton","Tennis","Squash"];
 
    const columns = [
-      { title: t('CustomerName.label'), editable: 'never', filtering: false, customSort: (a, b) => (a.Customer.firstName + a.Customer.lastName).toLowerCase() > (b.Customer.firstName + b.Customer.lastName).toLowerCase() ? 1 : -1, render: rowData => rowData.Customer && (rowData.Customer.firstName + " " + rowData.Customer.lastName + "/" + rowData.Customer.sportsClub)},
-      { title: t('Racket.label'), editable: 'never', filtering: false, customSort: (a, b) => (a.Racket.sportType + a.Racket.Brand + a.Racket.Name + a.Racket.Grip).toLowerCase() > (b.Racket.sportType + b.Racket.Brand + b.Racket.Name + b.Racket.Grip).toLowerCase() ? 1 : -1, render: rowData => rowData.Racket && (sportTypes[rowData.Racket.sportType] + "-" + rowData.Racket.Brand + "-" + rowData.Racket.Name + "-" + rowData.Racket.Grip)},
       { title: t('StringBrand.label'), field: 'String.Brand', customSort: (a, b) => compareFunction(a,b,'String.Brand')},
       { title: t('StringName.label'), field: 'String.Name', customSort: (a, b) => compareFunction(a,b,'String.Name')},
       { title: t('StringThickness.label'), sorting:false, field: 'String.Thickness', type: 'numeric',headerStyle: {textAlign:'left', flexDirection:'row'}, cellStyle: {textAlign:'left'}},
       { title: t('StringColor.label'), field: 'String.Color', customSort: (a, b) => compareFunction(a,b,'String.Color')},
       { title: t('StringHardness.label'), sorting:false, field: 'String.Hardness', type: 'numeric',headerStyle: {textAlign:'left', flexDirection:'row'}, cellStyle: {textAlign:'left'}},
+      { title: t('Customer.label'), editable: 'never', customSort: (a, b) => (a.Customer.firstName + a.Customer.lastName).toLowerCase() > (b.Customer.firstName + b.Customer.lastName).toLowerCase() ? 1 : -1, render: rowData => rowData.Customer && (rowData.Customer.firstName + " " + rowData.Customer.lastName), customFilterAndSearch: (term, rowData) => (rowData.Customer.firstName + " " + rowData.Customer.lastName).includes(term)},
+      { title: t('SportsClub.label'), field: 'Customer.sportsClub', customSort: (a, b) => compareFunction(a,b,'Customer.sportsClub')},
+      { title: t('Racket.label'), editable: 'never', filtering: false, customSort: (a, b) => (a.Racket.sportType + a.Racket.Brand + a.Racket.Name + a.Racket.Grip).toLowerCase() > (b.Racket.sportType + b.Racket.Brand + b.Racket.Name + b.Racket.Grip).toLowerCase() ? 1 : -1, render: rowData => rowData.Racket && (sportTypes[rowData.Racket.sportType] + "-" + rowData.Racket.Brand + "-" + rowData.Racket.Name + "-" + rowData.Racket.Grip)},
+      
    ];
 
    const [data, setData] = React.useState([]);

@@ -18,11 +18,12 @@ export default function MaterialTableDemo() {
    const { t } = useTranslation()
 
    const columns = [
-      { title: t('RacketBrand.label'), field: 'Racket.Brand', customSort: (a, b) => compareFunction(a,b,'Racket.Brand')},
+      { title: t('Racket.label'), field: 'Racket.Brand', customSort: (a, b) => compareFunction(a,b,'Racket.Brand')},
       { title: t('RacketName.label'), field: 'Racket.Name', customSort: (a, b) => compareFunction(a,b,'Racket.Name')},
       { title: t('RacketGrip.label'), field: 'Racket.Grip', customSort: (a, b) => compareFunction(a,b,'Racket.Grip') },
       { title: t('SportType.label'), field: 'Racket.sportType', lookup: { 2: 'Squash', 1: 'Tennis', 0: 'Badminton' }},
-      { title: t('CustomerName-Racket.label'), editable: 'never', filtering: false, customSort: (a, b) => (a.Customer.firstName + a.Customer.lastName).toLowerCase() > (b.Customer.firstName + b.Customer.lastName).toLowerCase() ? 1 : -1, customFilterAndSearch: (term, rowData) => (rowData.Customer.firstName + " " + rowData.Customer.lastName).includes(term), render: rowData => rowData.Customer && (rowData.Customer.firstName + " " + rowData.Customer.lastName + "/" + rowData.Customer.sportsClub)},
+      { title: t('Customer.label'), editable: 'never', customSort: (a, b) => (a.Customer.firstName + a.Customer.lastName).toLowerCase() > (b.Customer.firstName + b.Customer.lastName).toLowerCase() ? 1 : -1, render: rowData => rowData.Customer && (rowData.Customer.firstName + " " + rowData.Customer.lastName), customFilterAndSearch: (term, rowData) => (rowData.Customer.firstName + " " + rowData.Customer.lastName).includes(term)},
+      { title: t('SportsClub.label'), field: 'Customer.sportsClub', customSort: (a, b) => compareFunction(a,b,'Customer.sportsClub')},
    ];
 
    const [data, setData] = React.useState([]);
