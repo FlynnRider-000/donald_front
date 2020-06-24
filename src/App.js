@@ -12,7 +12,8 @@ import {
   Account as AccountView,
   Customer as CustomerView,
   Racket as RacketView,
-  String as StringView
+  String as StringView,
+  GuestRequest as GuestRequestView
 } from './pages';
 
 import theme from './theme';
@@ -65,6 +66,11 @@ function App() {
                   layout={MainLayout}
                   path="/string"
                 />  
+                <Route
+                  component={GuestRequestView}
+                  exact
+                  path="/guestRequest"
+                />
                 <Route path="/" key={1} component={SignInView} />
               </Switch>
             </Router>

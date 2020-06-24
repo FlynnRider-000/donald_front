@@ -237,7 +237,7 @@ export default function ServiceRequest(props) {
             <DialogTitle id="max-width-dialog-title"><div className={classes.dlgTitle}>{t('ServiceRequest.label')}</div></DialogTitle>
             <Divider/>
             <DialogContent>
-                <ValidatorForm onSubmit={onSubmit}>
+                <ValidatorForm onSubmit={onSubmit}  autocomplete="off">
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                             disableToolbar

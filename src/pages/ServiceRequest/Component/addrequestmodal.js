@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Paper, RadioGroup, FormControlLabel, Radio,
         FormControl, InputLabel, Select, MenuItem, Grid} from '@material-ui/core';
-
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import Checkbox from 'react-checkbox-component'
 
 import DateFnsUtils from '@date-io/date-fns';
@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+
 export default function ServiceRequest(props) {
     const classes = useStyles();
     const { opened, onAdd, onClose, data} = props;
@@ -68,6 +69,9 @@ export default function ServiceRequest(props) {
     const [refData, setRefData] = React.useState([]);
     const [agreeTerms, setAgreeTerms] = React.useState(false);
     const [showTerms, setShowTerms] = React.useState(false);
+
+    const [racketData, setRacketData] = React.useState([]);
+    const [stringData, setStringData] = React.useState([]);
 
     const userId = useSelector(state => state.user.userId);
     const userRole = useSelector(state => state.user.userRole);
@@ -158,6 +162,15 @@ export default function ServiceRequest(props) {
         axios.post(serverUrl + 'service/getData',{userId,userRole})
         .then(function (response){
             setRefData(response.data);
+
+            axios.post(serverUrl + 'service/getDropdownList')
+            .then(function (res) {
+                setRacketData(res.data.rackets);
+                setStringData(res.data.strings);
+            })
+            .catch(function (error){
+                console.log(error);
+            })
         })
         .catch(function (error){
             console.log(error);
@@ -266,7 +279,7 @@ export default function ServiceRequest(props) {
             <DialogTitle id="max-width-dialog-title"><div className={classes.dlgTitle}>{t('ServiceRequest.label')}</div></DialogTitle>
             <Divider/>
             <DialogContent>
-                <ValidatorForm onSubmit={onSubmit}>
+                <ValidatorForm onSubmit={onSubmit}  autocomplete="off">
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                             disableToolbar
@@ -548,17 +561,31 @@ export default function ServiceRequest(props) {
                                     md={6}
                                     xs={12}
                                     >
-                                        <TextValidator 
-                                            fullWidth
-                                            label={t('RacketBrand.label')}
-                                            margin="dense"
-                                            name="Brand"
-                                            onChange={handleNewRacketChange}
-                                            required
-                                            value={newRacket.Brand}
-                                            variant="outlined"
-                                            validators={['required']}
-                                            errorMessages={['Feld muss ausgefüllt werden']}
+                                        <Autocomplete
+                                            id="racketbrand"
+                                            freeSolo
+                                            options={racketData.map(item => item.Brand).filter((value, index, self) => self.indexOf(value) === index)}
+                                            onChange={(event, newValue) => {
+                                                setNewRacket({
+                                                    ...newRacket,
+                                                    Brand: newValue
+                                                })
+                                            }}
+                                            renderInput={(params) => (
+                                                <TextValidator 
+                                                    {...params}
+                                                    fullWidth
+                                                    label={t('RacketBrand.label')}
+                                                    margin="dense"
+                                                    name="Brand"
+                                                    value={newRacket.Brand}
+                                                    onChange={handleNewRacketChange}
+                                                    required
+                                                    variant="outlined"
+                                                    validators={['required']}
+                                                    errorMessages={['Feld muss ausgefüllt werden']}
+                                                />
+                                            )}
                                         />
                                     </Grid>
                                     <Grid
@@ -566,18 +593,32 @@ export default function ServiceRequest(props) {
                                     md={6}
                                     xs={12}
                                     >
-                                    <TextValidator 
-                                        fullWidth
-                                        label={t('RacketName.label')}
-                                        margin="dense"
-                                        name="Name"
-                                        onChange={handleNewRacketChange}
-                                        required
-                                        value={newRacket.Name}
-                                        variant="outlined"
-                                        validators={['required']}
-                                        errorMessages={['Feld muss ausgefüllt werden']}
-                                    />
+                                        <Autocomplete
+                                            id="racketbrand1"
+                                            freeSolo
+                                            onChange={(event, newValue) => {
+                                                setNewRacket({
+                                                    ...newRacket,
+                                                    Name: newValue
+                                                })
+                                            }}
+                                            options={racketData.filter((option) => option.Brand === newRacket.Brand).map(option => option.Name).filter((value, index, self) => self.indexOf(value) === index)}
+                                            renderInput={(params) => (
+                                                <TextValidator 
+                                                    {...params}
+                                                    fullWidth
+                                                    label={t('RacketName.label')}
+                                                    margin="dense"
+                                                    name="Name"
+                                                    onChange={handleNewRacketChange}
+                                                    required
+                                                    value={newRacket.Name}
+                                                    variant="outlined"
+                                                    validators={['required']}
+                                                    errorMessages={['Feld muss ausgefüllt werden']}
+                                                />
+                                            )}
+                                        />
                                     </Grid>
                                     <Grid
                                     item
@@ -648,17 +689,31 @@ export default function ServiceRequest(props) {
                                     md={6}
                                     xs={12}
                                     >
-                                        <TextValidator 
-                                            fullWidth
-                                            label={t('StringBrand.label')}
-                                            margin="dense"
-                                            name="Brand"
-                                            onChange={handleNewStringChange}
-                                            required
-                                            value={newString.Brand}
-                                            variant="outlined"
-                                            validators={['required']}
-                                            errorMessages={['Feld muss ausgefüllt werden']}
+                                        <Autocomplete
+                                            id="stringbrand"
+                                            freeSolo
+                                            options={stringData.map(item => item.Brand).filter((value, index, self) => self.indexOf(value) === index)}
+                                            onChange={(event, newValue) => {
+                                                setNewString({
+                                                    ...newString,
+                                                    Brand: newValue
+                                                })
+                                            }}
+                                            renderInput={(params) => (
+                                                <TextValidator 
+                                                    {...params}
+                                                    fullWidth
+                                                    label={t('StringBrand.label')}
+                                                    margin="dense"
+                                                    name="Brand"
+                                                    onChange={handleNewStringChange}
+                                                    required
+                                                    value={newString.Brand}
+                                                    variant="outlined"
+                                                    validators={['required']}
+                                                    errorMessages={['Feld muss ausgefüllt werden']}
+                                                />
+                                            )}
                                         />
                                     </Grid>
                                     <Grid
@@ -666,17 +721,31 @@ export default function ServiceRequest(props) {
                                     md={6}
                                     xs={12}
                                     >
-                                        <TextValidator 
-                                            fullWidth
-                                            label={t('StringName.label')}
-                                            margin="dense"
-                                            name="Name"
-                                            onChange={handleNewStringChange}
-                                            required
-                                            value={newString.Name}
-                                            variant="outlined"
-                                            validators={['required']}
-                                            errorMessages={['Feld muss ausgefüllt werden']}
+                                        <Autocomplete
+                                            id="stringbrand1"
+                                            freeSolo
+                                            options={stringData.filter((option) => option.Brand === newString.Brand).map(option => option.Name).filter((value, index, self) => self.indexOf(value) === index)}
+                                            onChange={(event, newValue) => {
+                                                setNewString({
+                                                    ...newString,
+                                                    Name: newValue
+                                                })
+                                            }}
+                                            renderInput={(params) => (
+                                                <TextValidator 
+                                                    {...params}
+                                                    fullWidth
+                                                    label={t('StringName.label')}
+                                                    margin="dense"
+                                                    name="Name"
+                                                    onChange={handleNewStringChange}
+                                                    required
+                                                    value={newString.Name}
+                                                    variant="outlined"
+                                                    validators={['required']}
+                                                    errorMessages={['Feld muss ausgefüllt werden']}
+                                                />
+                                            )}
                                         />
                                     </Grid>
                                     <Grid

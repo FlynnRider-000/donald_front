@@ -5,7 +5,7 @@ import {
    Typography
 } from '@material-ui/core';
 
-import { useHistory } from 'react-router-dom';
+import { useHistory} from 'react-router-dom';
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { useDispatch } from 'react-redux'
@@ -53,6 +53,9 @@ export default function Signin(props) {
       })
    }
 
+   const onGuestPage = () => {
+      history.push('/guestRequest');
+   }
    return (
       <div className={classes.root}>
       <Grid
@@ -153,6 +156,17 @@ export default function Signin(props) {
                         variant="contained"
                      >
                         Anmelden
+                     </Button>
+                     <Button
+                        className={classes.signInButton}
+                        color="#000"
+                        fullWidth
+                        size="large"
+                        type="submit"
+                        variant="contained"
+                        onClick={onGuestPage}
+                     >
+                        Eintrag als Gast hinzufügen
                      </Button>
                   </ValidatorForm>
                </div>

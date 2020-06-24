@@ -5,6 +5,9 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.background.default,
         height: '100%'
     },
+    toGuest: {
+        fontSize: '18px'
+    },
     grid: {
         height: '100%'
     },

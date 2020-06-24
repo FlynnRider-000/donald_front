@@ -66,11 +66,11 @@ export default function MaterialTableDemo() {
 
    const columns = [
       { title: t('Date.label'), field: 'date', defaultSort:'desc', cellStyle:{minWidth:'120px'}},
-      { title: t('RequestedPickUpDateTime.label'), render: rowData => {let temp = new Date(rowData.reqPickTime); return rowData.reqPickTime !== null ? getDateFormat(rowData.reqPickTime)+ " " + getTimeFormat(rowData.reqPickTime): ""}, customSort:(a,b) => a.reqPickTime > b.reqPickTime ? 1: -1},
+      { title: t('RequestedPickUpDateTime.label'), render: rowData => {return rowData.reqPickTime !== null ? getDateFormat(rowData.reqPickTime)+ " " + getTimeFormat(rowData.reqPickTime): ""}, customSort:(a,b) => a.reqPickTime > b.reqPickTime ? 1: -1},
       { title: t('status.label'), field: 'status', lookup: { 4:'abgeholt', 3: 'im Club (b)', 2: 'im Laden (b)', 1: 'im Laden (u)', 0: 'im Club (u)' }},
       { title: t('CustomerName.label'), customSort: (a, b) => (a.Customer.firstName + a.Customer.lastName).toLowerCase() > (b.Customer.firstName + b.Customer.lastName).toLowerCase() ? 1 : -1, customFilterAndSearch: (term, rowData) => (rowData.Customer.firstName + " " + rowData.Customer.lastName).includes(term), render: rowData => rowData.Customer && (rowData.Customer.firstName + " " + rowData.Customer.lastName)},
       { title: t('location.label'), field: 'location', customSort: (a, b) => compareFunction(a,b,'location')},
-      { title: t('ConfirmedPickUpDateTime.label'), render: rowData => {let temp = new Date(rowData.confPickTime); return rowData.confPickTime !== null ? getDateFormat(rowData.confPickTime) + " " + getTimeFormat(rowData.confPickTime): ""}, customSort:(a,b) => a.confPickTime > b.confPickTime ? 1: -1},
+      { title: t('ConfirmedPickUpDateTime.label'), render: rowData => {return rowData.confPickTime !== null ? getDateFormat(rowData.confPickTime) + " " + getTimeFormat(rowData.confPickTime): ""}, customSort:(a,b) => a.confPickTime > b.confPickTime ? 1: -1},
       { title: t('Payed.label'), field: 'payed', render: rowData => {return rowData.payed === 'no' ? 'nein' : rowData.payed}},
       { title: t('Racket.label'), field: 'Racket.Brand', customSort: (a, b) => compareFunction(a,b,'Racket.Brand')},
       { title: t('RacketName.label'), field: 'Racket.Name', customSort: (a, b) => compareFunction(a,b,'Racket.Name')},
