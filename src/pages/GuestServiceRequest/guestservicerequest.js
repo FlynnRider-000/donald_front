@@ -16,6 +16,8 @@ import { useHistory} from 'react-router-dom';
 import { useDispatch } from 'react-redux'
 
 import { serverUrl } from '../../api/serverUrl';
+import Checkbox from 'react-checkbox-component'
+import TermsDlg from './Terms';
 
 const axios = require('axios');
 
@@ -68,7 +70,9 @@ export default function ServiceRequest(props) {
     const [racketData, setRacketData] = React.useState([]);
     const [stringData, setStringData] = React.useState([]);
 
-    
+    const [showTerms, setShowTerms] = React.useState(false);
+    const [agreeTerms, setAgreeTerms] = React.useState(false);
+
     const initCustomer = {
         "firstName": "",
         "lastName": "",
@@ -140,7 +144,10 @@ export default function ServiceRequest(props) {
     const [newString, setNewString] = React.useState(initString);
     const [curData, setCurData] = React.useState(initCurData);
 
-    
+    const onHideTerms = () => {
+        setShowTerms(false);
+    }
+
     const onEntered = () => {
         dispatch({ type: "Set_Language", data: "DE"});
         i18n.changeLanguage("de");
@@ -227,7 +234,7 @@ export default function ServiceRequest(props) {
         res1.Customer = newCustomer;
         res1.Racket = newRacket;
         res1.String = newString;
-        if(flg === 0)
+        if(flg === 0 && agreeTerms)
         {
             res1.realdata = res;
             axios.post(serverUrl + 'service/addRequest',{data:JSON.stringify(res1)})
@@ -733,6 +740,12 @@ export default function ServiceRequest(props) {
                             />
                         </Grid>
                     </Grid>
+                    <div style={{padding:'10px 0px'}}>
+                        <Checkbox shape="square" className={classes.termsCheckBox} size="small" isChecked={agreeTerms} onChange={() => setAgreeTerms(!agreeTerms)}/>
+                        <div style={{fontSize:'18px', fontFamily:'Roboto', display:'inline', color: agreeTerms ? 'black':'red'}}>
+                            {t('TermsLink1.label')}<span onClick={() => setShowTerms(true)} className={classes.termsLink}>{t('TermsLink2.label')}</span>{t('TermsLink3.label')}
+                        </div>
+                    </div>
                     <DialogActions>
                         <Button color="primary" type="submit">
                             {t('Add.label')}
@@ -743,6 +756,7 @@ export default function ServiceRequest(props) {
                     </DialogActions>
                 </ValidatorForm>
             </DialogContent>
+            <TermsDlg opened={showTerms} onClose={onHideTerms}></TermsDlg>
         </Container>
         </React.Fragment>
     );
